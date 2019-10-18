@@ -65,7 +65,7 @@ export default [{
     },
     component: () => import('@/view/routers/routers-page.vue')
   }],
-  component: Main,
+  component: Main
 
 },
 {
@@ -86,8 +86,8 @@ export default [{
     },
     component: () => import('@/view/consumers/consumers-page.vue')
   }],
-  component: Main,
-    
+  component: Main
+
 },
 {
   path: '/services',
@@ -97,7 +97,7 @@ export default [{
     icon: 'ios-navigate',
     title: 'services'
   },
-  children:[{
+  children: [{
     path: '/services',
     name: 'services',
     meta: {
@@ -107,8 +107,8 @@ export default [{
     },
     component: () => import('@/view/services/services-page.vue')
   }],
-  component: Main,
-    
+  component: Main
+
 },
 {
   path: '/ssl',
@@ -128,8 +128,8 @@ export default [{
     },
     component: () => import('@/view/ssl/ssl-page.vue')
   }],
-  component: Main,
-    
+  component: Main
+
 },
 
 {
@@ -150,7 +150,7 @@ export default [{
     },
     component: () => import('@/view/upstream/upstream-page.vue')
   }],
-  component: Main,
+  component: Main
 },
 
 {

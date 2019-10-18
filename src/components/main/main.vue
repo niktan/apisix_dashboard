@@ -96,7 +96,7 @@ export default {
       return this.$store.state.app.hasReadErrorPage
     },
     unreadCount () {
-      return 0;
+      return 0
       // return this.$store.state.user.unreadCount
     }
   },

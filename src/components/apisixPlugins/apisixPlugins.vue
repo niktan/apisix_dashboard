@@ -74,84 +74,82 @@
 </template>
 
 <script>
-import Tables from "_c/tables";
-import { Form } from "iview";
-import { getPluginsList, getPluginConfig } from "@/api/data";
+import Tables from '_c/tables'
+import { Form } from 'iview'
+import { getPluginsList, getPluginConfig } from '@/api/data'
 export default {
-  name: "apisixPlugins",
+  name: 'apisixPlugins',
   components: {
     Tables
   },
   props: {
     defaultPlugins: Object
   },
-  data() {
+  data () {
     return {
       formData: {
         plugins: {}
       },
-      //插件配置窗口状态
+      // 插件配置窗口状态
       pluginsDialog: false,
-      //获取的所有插件列表
+      // 获取的所有插件列表
       pluginsList: [],
-      //动态增加的插件列表
+      // 动态增加的插件列表
       addPluginsList: [],
-      //当前选中配置的插件名称
-      selectPluginName: "",
-      //当前选中配置的插件相关字段数据
+      // 当前选中配置的插件名称
+      selectPluginName: '',
+      // 当前选中配置的插件相关字段数据
       selectPluginField: {},
-      //插件配置清单
+      // 插件配置清单
       schema: {}
-    };
+    }
   },
   methods: {
-    createLabel(index, item) {
+    createLabel (index, item) {
       switch (item.type) {
-        case "integer":
-        case "number":
+        case 'integer':
+        case 'number':
           if (item.minimum && item.minimum > 0) {
-            this.selectPluginField[index] = item.minimum;
+            this.selectPluginField[index] = item.minimum
           } else {
-            this.selectPluginField[index] = 0;
+            this.selectPluginField[index] = 0
           }
-          break;
+          break
       }
       return this.schema.required && this.schema.required.indexOf(index) > -1
-        ? "*" + index
-        : index;
+        ? '*' + index
+        : index
     },
-    isRequired(index) {
-      return this.schema.required && this.schema.required.indexOf(index) > -1
-        ? true
-        : false;
+    isRequired (index) {
+      return !!(this.schema.required && this.schema.required.indexOf(index) > -1)
     },
     /**
      * 插件配置数据保存
      */
-    savePluginData(u) {
-      this.$refs["settingPlugins"].validate(valid => {
+    savePluginData (u) {
+      this.$refs['settingPlugins'].validate(valid => {
         if (!valid) {
-          return;
+          return
         }
-        this.pluginsDialog = false;
-        this.formData.plugins[this.selectPluginName] = this.selectPluginField;
+        this.pluginsDialog = false
+        this.formData.plugins[this.selectPluginName] = this.selectPluginField
         for (let index = 0; index < this.addPluginsList.length; index++) {
           if (this.addPluginsList[index].value == this.selectPluginName) {
-            return;
+            return
           }
         }
         this.addPluginsList.push({
           value: this.selectPluginName
-        });
+        })
 
-        this.selectPluginField = {};
-        this.$emit("on-change", this.formData.plugins);
-      });
+        this.selectPluginField = {}
+        this.$emit('on-change', this.formData.plugins)
+      })
     },
     /**
      * 插件配置数据变化处理
      */
-    pluginDataChange(item, key, value) {
+    pluginDataChange (item, key, value) {
       // console.log('....',this.selectPluginField);
       // if(!this.formData.plugins[this.selectPluginName]){
       //   this.formData.plugins[this.selectPluginName]={};
@@ -160,52 +158,52 @@ export default {
       // console.log(this.formData);
       // console.log(this.selectPluginField);
     },
-    pluginChangeSelected(data) {
-      this.setPlugingConfig(data);
+    pluginChangeSelected (data) {
+      this.setPlugingConfig(data)
     },
-    removePlugin(index) {
-      delete this.formData.plugins[this.addPluginsList[index].value];
-      this.addPluginsList.splice(index, 1);
-      this.$emit("on-change", this.formData.plugins);
+    removePlugin (index) {
+      delete this.formData.plugins[this.addPluginsList[index].value]
+      this.addPluginsList.splice(index, 1)
+      this.$emit('on-change', this.formData.plugins)
     },
-    //获取插件配置数据，并显示插件配置窗口
-    setPlugingConfig(plugin) {
+    // 获取插件配置数据，并显示插件配置窗口
+    setPlugingConfig (plugin) {
       getPluginConfig(plugin).then(res => {
-        this.schema = res.data;
-        this.selectPluginName = plugin;
-        this.pluginsDialog = true;
+        this.schema = res.data
+        this.selectPluginName = plugin
+        this.pluginsDialog = true
         if (this.formData.plugins[this.selectPluginName]) {
-          this.selectPluginField = this.formData.plugins[this.selectPluginName];
+          this.selectPluginField = this.formData.plugins[this.selectPluginName]
         }
-      });
+      })
     },
-    init() {
-      this.pluginsList = [];
+    init () {
+      this.pluginsList = []
       getPluginsList().then(res => {
         for (var i = 0; i < res.data.length; i++) {
           this.pluginsList.push({
             value: res.data[i],
             label: res.data[i]
-          });
+          })
         }
-      });
+      })
     }
   },
   watch: {
-    defaultPlugins(plugins) {
-      this.addPluginsList = [];
-      this.formData.plugins = plugins;
+    defaultPlugins (plugins) {
+      this.addPluginsList = []
+      this.formData.plugins = plugins
       for (const key in plugins) {
         this.addPluginsList.push({
           value: key
-        });
+        })
       }
     }
   },
-  mounted() {
-    this.init();
+  mounted () {
+    this.init()
   }
-};
+}
 </script>
 
 <style>

@@ -27,8 +27,8 @@ module.exports = {
         // target: 'http://192.168.25.166:9080/',
         target: 'http://apisix.iresty.com/',
         changeOrigin: true,
-        //路径重写
-        pathRewrite: {'^/api' : ''},
+        // 路径重写
+        pathRewrite: { '^/api': '' }
       }
     }
   },

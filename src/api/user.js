@@ -1,4 +1,4 @@
-import axios from '@/libs/api.request';
+import axios from '@/libs/api.request'
 
 const USER_MAP = {
   super_admin: {
@@ -15,12 +15,12 @@ const USER_MAP = {
     token: 'admin',
     avator: 'https://avatars0.githubusercontent.com/u/20942571?s=460&v=4'
   }
-};
+}
 
 export const login = ({ userName, password }) => {
   return new Promise((resolve, reject) => {
-    resolve({ data: { token: USER_MAP[userName].token } });
-  });
+    resolve({ data: { token: USER_MAP[userName].token } })
+  })
 
   // const data = {
   //   userName,
@@ -31,12 +31,12 @@ export const login = ({ userName, password }) => {
   //   data,
   //   method: 'post'
   // })
-};
+}
 
 export const getUserInfo = (token) => {
   return new Promise((resolve, reject) => {
-    resolve({ data: { token: USER_MAP[token] } });
-  });
+    resolve({ data: { token: USER_MAP[token] } })
+  })
   // return axios.request({
   //   url: 'get_info',
   //   params: {
@@ -44,31 +44,31 @@ export const getUserInfo = (token) => {
   //   },
   //   method: 'get'
   // })
-};
+}
 
 export const logout = (token) => {
   return new Promise((resolve, reject) => {
-    resolve(null);
-  });
+    resolve(null)
+  })
   // return axios.request({
   //   url: 'logout',
   //   method: 'post'
   // })
-};
+}
 
 export const getUnreadCount = () => {
   return axios.request({
     url: 'message/count',
     method: 'get'
-  });
-};
+  })
+}
 
 export const getMessage = () => {
   return axios.request({
     url: 'message/init',
     method: 'get'
-  });
-};
+  })
+}
 
 export const getContentByMsgId = (msg_id) => {
   return axios.request({
@@ -77,8 +77,8 @@ export const getContentByMsgId = (msg_id) => {
     params: {
       msg_id
     }
-  });
-};
+  })
+}
 
 export const hasRead = (msg_id) => {
   return axios.request({
@@ -87,8 +87,8 @@ export const hasRead = (msg_id) => {
     data: {
       msg_id
     }
-  });
-};
+  })
+}
 
 export const removeReaded = (msg_id) => {
   return axios.request({
@@ -97,8 +97,8 @@ export const removeReaded = (msg_id) => {
     data: {
       msg_id
     }
-  });
-};
+  })
+}
 
 export const restoreTrash = (msg_id) => {
   return axios.request({
@@ -107,5 +107,5 @@ export const restoreTrash = (msg_id) => {
     data: {
       msg_id
     }
-  });
-};
+  })
+}

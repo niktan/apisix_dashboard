@@ -131,10 +131,10 @@
 </template>
 
 <script>
-import Tables from "_c/tables";
-import { Form } from "iview";
-import ApisixPlugins from "_c/apisixPlugins";
-import ApisixUpstream from "_c/apisixUpstream";
+import Tables from '_c/tables'
+import { Form } from 'iview'
+import ApisixPlugins from '_c/apisixPlugins'
+import ApisixUpstream from '_c/apisixUpstream'
 import {
   getRoutersData,
   getUpstreamsList,
@@ -143,85 +143,85 @@ import {
   getRoutersList,
   deleteRouter,
   updateRouter
-} from "@/api/data";
+} from '@/api/data'
 export default {
-  name: "routers_page",
+  name: 'routers_page',
   components: {
     Tables,
     Form,
     ApisixPlugins,
     ApisixUpstream
   },
-  data() {
+  data () {
     return {
       selectUpstreamDataColumns: [
         {
-          title: "Ip",
-          key: "ip"
+          title: 'Ip',
+          key: 'ip'
         },
         {
-          title: "Port",
-          key: "port"
+          title: 'Port',
+          key: 'port'
         },
         {
-          title: "Weights",
-          key: "weights"
+          title: 'Weights',
+          key: 'weights'
         }
       ],
       selectUpstreamData: { value: {} },
       selectUpstreamDataColumnsData: [],
       showSelectUpstreamDataStatus: false,
-      upstream_id: "",
+      upstream_id: '',
       upstreamDialogStatus: false,
       value: [],
       submitStatus: false,
-      searchValue: "",
-      searchKey: "",
+      searchValue: '',
+      searchKey: '',
       plugins: {},
       tableHeight: null,
-      //提交保存的路由数据
+      // 提交保存的路由数据
       formData: {
-        desc: "",
+        desc: '',
         // host: "",
-        uri: "",
+        uri: '',
         // remote_addr: "",
         // methods: [],
         // upstream_id: "",
         // service_id: "",
         plugins: {}
       },
-      //路由配置窗口状态
+      // 路由配置窗口状态
       addRouterDialogStatus: false,
-      //路由编辑状态
+      // 路由编辑状态
       isEditRouterStatus: false,
-      //插件配置窗口状态
+      // 插件配置窗口状态
       pluginsDialog: false,
-      //获取的所有上游列表
+      // 获取的所有上游列表
       upstreamList: [],
-      //获取的所有服务列表
+      // 获取的所有服务列表
       servicesList: [],
-      //获取的所有插件列表
+      // 获取的所有插件列表
       pluginsList: [],
-      //动态增加的插件列表
+      // 动态增加的插件列表
       addPluginsList: [],
-      //当前选中配置的插件名称
-      selectPluginName: "",
-      //当前选中配置的插件相关字段数据
+      // 当前选中配置的插件名称
+      selectPluginName: '',
+      // 当前选中配置的插件相关字段数据
       selectPluginField: {},
-      //插件配置清单
+      // 插件配置清单
       schema: {},
 
       columns: [
-        { title: "id", key: "id", sortable: true, fixed: "left", width: 180 },
-        { title: "desc", key: "desc", width: 150 },
-        { title: "uri", key: "uri", minWidth: 100 },
-        { title: "host", key: "host", width: 150 },
-        { title: "remote_addr", key: "remote_addr", width: 150 },
-        { title: "upstream_id", key: "upstream_id", width: 150 },
-        { title: "service_id", key: "service_id", width: 150 },
+        { title: 'id', key: 'id', sortable: true, fixed: 'left', width: 180 },
+        { title: 'desc', key: 'desc', width: 150 },
+        { title: 'uri', key: 'uri', minWidth: 100 },
+        { title: 'host', key: 'host', width: 150 },
+        { title: 'remote_addr', key: 'remote_addr', width: 150 },
+        { title: 'upstream_id', key: 'upstream_id', width: 150 },
+        { title: 'service_id', key: 'service_id', width: 150 },
         {
-          title: "methods",
-          key: "methods",
+          title: 'methods',
+          key: 'methods',
           width: 150
           //  render: (h, params) => {
           //   var t = [];
@@ -232,8 +232,8 @@ export default {
           // }
         },
         {
-          title: "plugins",
-          key: "plugins",
+          title: 'plugins',
+          key: 'plugins',
           width: 200
           // render: (h, params) => {
           //   var t = [];
@@ -244,299 +244,299 @@ export default {
           // }
         },
         {
-          title: "操作",
-          key: "handle",
-          fixed: "right",
+          title: '操作',
+          key: 'handle',
+          fixed: 'right',
           width: 150,
           button: (h, params) => {
-            return h("div", [
+            return h('div', [
               h(
-                "Button",
+                'Button',
                 {
                   props: {
-                    type: "primary",
-                    size: "small"
+                    type: 'primary',
+                    size: 'small'
                   },
                   style: {
-                    marginRight: "5px"
+                    marginRight: '5px'
                   },
                   on: {
                     click: () => {
-                      this.edit(params.tableData[params.index]);
+                      this.edit(params.tableData[params.index])
                     }
                   }
                 },
-                "编辑"
+                '编辑'
               ),
               h(
-                "Button",
+                'Button',
                 {
                   props: {
-                    type: "error",
-                    size: "small"
+                    type: 'error',
+                    size: 'small'
                   },
                   on: {
                     click: () => {
                       this.$Modal.confirm({
-                        title: "确认删除",
+                        title: '确认删除',
                         content:
-                          "<p> " +
+                          '<p> ' +
                           params.tableData[params.index].desc +
-                          "</p><p> " +
+                          '</p><p> ' +
                           params.tableData[params.index].id +
-                          " </p><p>" +
+                          ' </p><p>' +
                           params.tableData[params.index].uri +
-                          "</p>",
+                          '</p>',
                         loading: true,
                         onOk: () => {
                           deleteRouter(params.tableData[params.index].id)
                             .then(res => {
-                              this.$Modal.remove();
-                              this.$Message.success("Has Deleted!");
-                              this.init();
+                              this.$Modal.remove()
+                              this.$Message.success('Has Deleted!')
+                              this.init()
                             })
                             .catch((e, res) => {
-                              this.$Modal.remove();
+                              this.$Modal.remove()
                               this.$Notice.error({
-                                title: "操作失败",
+                                title: '操作失败',
                                 desc: e.response.data.error_msg
-                              });
-                            });
+                              })
+                            })
                         }
-                      });
+                      })
                     }
                   }
                 },
-                "删除"
+                '删除'
               )
-            ]);
+            ])
           }
         }
       ],
       tableData: []
-    };
+    }
   },
   methods: {
-    initFormData() {
-      this.formData.desc = "";
+    initFormData () {
+      this.formData.desc = ''
       // this.formData.host = "";
-      this.formData.uri = "";
+      this.formData.uri = ''
       // this.formData.remote_addr = "";
       // this.formData.methods = [];
       // this.formData.upstream_id = "";
       // this.formData.service_id = "";
-      this.formData.plugins = {};
-      this.addPluginsList = [];
-      this.plugins = {};
+      this.formData.plugins = {}
+      this.addPluginsList = []
+      this.plugins = {}
     },
-    closeDialog() {
-      this.addRouterDialogStatus = false;
-      this.initFormData();
+    closeDialog () {
+      this.addRouterDialogStatus = false
+      this.initFormData()
     },
-    upstreamDialogStatusChange(status) {
-      this.upstreamDialogStatus = status;
-      //当 添加upstream关闭的时候，重新获取upstream 数据
+    upstreamDialogStatusChange (status) {
+      this.upstreamDialogStatus = status
+      // 当 添加upstream关闭的时候，重新获取upstream 数据
       if (!status) {
-        this.doGetUpstreamsList();
+        this.doGetUpstreamsList()
       }
     },
-    updateChangePlugins(data) {
-      this.formData.plugins = data;
+    updateChangePlugins (data) {
+      this.formData.plugins = data
     },
-    addShowRouterDialog() {
-      this.initFormData();
-      this.addRouterDialogStatus = true;
+    addShowRouterDialog () {
+      this.initFormData()
+      this.addRouterDialogStatus = true
     },
-    doGetUpstreamsList() {
+    doGetUpstreamsList () {
       getUpstreamsList().then(res => {
-        this.upstreamList = [];
-        var _data = [];
+        this.upstreamList = []
+        var _data = []
         for (var i = 0; i < res.data.node.nodes.length; i++) {
           this.upstreamList.push({
             value: res.data.node.nodes[i].key.match(/\/([0-9]+)/)[1],
             label: res.data.node.nodes[i].value.desc,
             data: res.data.node.nodes[i]
-          });
+          })
         }
-      });
+      })
     },
-    //初始化
-    init() {
-      this.servicesList = [];
-      this.pluginsList = [];
-      this.tableData = [];
-      this.doGetUpstreamsList();
+    // 初始化
+    init () {
+      this.servicesList = []
+      this.pluginsList = []
+      this.tableData = []
+      this.doGetUpstreamsList()
       getServicesList().then(res => {
         for (var i = 0; i < res.data.node.nodes.length; i++) {
           this.servicesList.push({
             value: res.data.node.nodes[i].key.match(/\/([0-9]+)/)[1],
             label: res.data.node.nodes[i].value.desc
-          });
+          })
         }
-      });
+      })
 
       getRoutersList().then(res => {
-        var _data = {};
+        var _data = {}
         for (var i = 0; i < res.data.node.nodes.length; i++) {
           _data = {
             id: res.data.node.nodes[i].key.match(/\/([0-9]+)/)[1],
             uri: res.data.node.nodes[i].value.uri,
-            plugins: "",
-            methods: "",
-            upstream_id: "",
-            remote_addr: "",
-            host: "",
-            desc: "",
-            service_id: ""
-          };
+            plugins: '',
+            methods: '',
+            upstream_id: '',
+            remote_addr: '',
+            host: '',
+            desc: '',
+            service_id: ''
+          }
 
           if (res.data.node.nodes[i].value.remote_addr) {
-            _data.remote_addr = res.data.node.nodes[i].value.remote_addr;
+            _data.remote_addr = res.data.node.nodes[i].value.remote_addr
           }
           if (res.data.node.nodes[i].value.upstream_id) {
-            _data.upstream_id = res.data.node.nodes[i].value.upstream_id;
+            _data.upstream_id = res.data.node.nodes[i].value.upstream_id
           }
           if (res.data.node.nodes[i].value.desc) {
-            _data.desc = res.data.node.nodes[i].value.desc;
+            _data.desc = res.data.node.nodes[i].value.desc
           }
 
           if (res.data.node.nodes[i].value.service_id) {
-            _data.service_id = res.data.node.nodes[i].value.service_id;
+            _data.service_id = res.data.node.nodes[i].value.service_id
           }
           if (res.data.node.nodes[i].value.host) {
-            _data.host = res.data.node.nodes[i].value.host;
+            _data.host = res.data.node.nodes[i].value.host
           }
 
           if (res.data.node.nodes[i].value.plugins) {
-            _data.plugins = [];
+            _data.plugins = []
             for (const key in res.data.node.nodes[i].value.plugins) {
               // _data.plugins.push(key);
-              _data.plugins += key + " ";
+              _data.plugins += key + ' '
             }
           }
           if (res.data.node.nodes[i].value.methods) {
             for (const key in res.data.node.nodes[i].value.methods) {
-              _data.methods += res.data.node.nodes[i].value.methods[key] + " ";
+              _data.methods += res.data.node.nodes[i].value.methods[key] + ' '
               // _data.methods.push(res.data.node.nodes[i].value.methods[key]);
             }
           }
-          this.tableData.push(_data);
+          this.tableData.push(_data)
         }
-        this.value = this.tableData;
-      });
+        this.value = this.tableData
+      })
     },
     /**
      * 提交路由保存
      */
-    submitForm() {
-      this.$refs["formDialog"].validate(valid => {
+    submitForm () {
+      this.$refs['formDialog'].validate(valid => {
         if (!valid) {
-          return;
+          return
         }
-        //更新
+        // 更新
         if (this.isEditRouterStatus) {
-          let key = this.formData.key.match(/\/([0-9]+)/)[1];
-          delete this.formData.key;
+          let key = this.formData.key.match(/\/([0-9]+)/)[1]
+          delete this.formData.key
           updateRouter(key, this.formData)
             .then((res, t) => {
               this.$Notice.success({
-                title: "操作成功",
-                desc: "操作成功"
-              });
-              this.addRouterDialogStatus = false;
-              this.isEditRouterStatus = false;
-              this.submitStatus = false;
-              this.init();
+                title: '操作成功',
+                desc: '操作成功'
+              })
+              this.addRouterDialogStatus = false
+              this.isEditRouterStatus = false
+              this.submitStatus = false
+              this.init()
             })
             .catch((e, res) => {
-              this.submitStatus = false;
+              this.submitStatus = false
               this.$Notice.error({
-                title: "操作失败",
+                title: '操作失败',
                 desc: e.response.data.error_msg
-              });
-            });
-          return;
+              })
+            })
+          return
         }
 
-        //新增
+        // 新增
         addRouters(this.formData)
           .then((res, t) => {
             this.$Notice.success({
-              title: "操作成功",
-              desc: "操作成功"
-            });
-            this.addRouterDialogStatus = false;
-            this.isEditRouterStatus = false;
-            this.submitStatus = false;
-            this.init();
+              title: '操作成功',
+              desc: '操作成功'
+            })
+            this.addRouterDialogStatus = false
+            this.isEditRouterStatus = false
+            this.submitStatus = false
+            this.init()
           })
           .catch((e, res) => {
-            this.submitStatus = false;
+            this.submitStatus = false
             this.$Notice.error({
-              title: "操作失败",
+              title: '操作失败',
               desc: e.response.data.error_msg
-            });
-          });
-      });
+            })
+          })
+      })
     },
 
-    //路由进入编辑模式
-    edit(routeData) {
-      this.isEditRouterStatus = true;
-      this.addRouterDialogStatus = true;
+    // 路由进入编辑模式
+    edit (routeData) {
+      this.isEditRouterStatus = true
+      this.addRouterDialogStatus = true
       getRoutersData(routeData.id).then(res => {
-        this.formData = res.data.node.value;
-        this.formData.key = res.data.node.key;
-        this.plugins = this.formData.plugins;
-      });
+        this.formData = res.data.node.value
+        this.formData.key = res.data.node.key
+        this.plugins = this.formData.plugins
+      })
     },
-    handleClear(e) {
-      if (e.target.value === "") this.tableData = this.value;
+    handleClear (e) {
+      if (e.target.value === '') this.tableData = this.value
     },
-    handleSearch() {
+    handleSearch () {
       this.tableData = this.value.filter(
         item => item[this.searchKey].indexOf(this.searchValue) > -1
-      );
+      )
     },
-    showSelectUpstreamData() {
-      this.showSelectUpstreamDataStatus = true;
-      this.selectUpstreamDataColumnsData = [];
-      this.selectUpstreamData = {};
+    showSelectUpstreamData () {
+      this.showSelectUpstreamDataStatus = true
+      this.selectUpstreamDataColumnsData = []
+      this.selectUpstreamData = {}
       for (let index = 0; index < this.upstreamList.length; index++) {
         if (this.upstreamList[index].value == this.formData.upstream_id) {
-          this.selectUpstreamData = this.upstreamList[index].data;
-          var _nodes = this.upstreamList[index].data.value.nodes;
+          this.selectUpstreamData = this.upstreamList[index].data
+          var _nodes = this.upstreamList[index].data.value.nodes
           for (const _key in _nodes) {
-            var _c = _key.split(":");
+            var _c = _key.split(':')
             this.selectUpstreamDataColumnsData.push({
               ip: _c[0],
               port: _c[1],
               weights: _nodes[_key]
-            });
+            })
           }
           console.log(
             this.upstreamList[index].data.value.nodes,
             this.showSelectUpstreamDataColumns
-          );
+          )
           // this.showSelectUpstreamDataColumns=this.upstreamList[index].nodes;
         }
       }
     }
   },
-  mounted() {
-    this.init();
+  mounted () {
+    this.init()
   },
   watch: {
-    upstream_id(value, _old_value) {
-      if (value == "__NEW_UPSTREAM__") {
-        this.formData.upstream_id = undefined;
-        this.upstreamDialogStatus = true;
+    upstream_id (value, _old_value) {
+      if (value == '__NEW_UPSTREAM__') {
+        this.formData.upstream_id = undefined
+        this.upstreamDialogStatus = true
       } else {
-        this.formData.upstream_id = value;
+        this.formData.upstream_id = value
       }
     }
   }
-};
+}
 </script>
 
 <style>

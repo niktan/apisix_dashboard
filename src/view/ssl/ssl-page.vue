@@ -1,6 +1,6 @@
 <template>
   <div>
-  
+
     <Modal  :mask-closable="false" v-model="addSslDialogStatus" title="添加SSL">
       <Form ref="formDialog" label-position="left" :model="formData" :label-width="100">
         <FormItem
@@ -41,175 +41,174 @@
 </template>
 
 <script>
-import Tables from "_c/tables";
-import { Form } from "iview";
-import { getSslsList, getSslData, updateSsl, deleteSsl,addSsl } from "@/api/data";
+import Tables from '_c/tables'
+import { Form } from 'iview'
+import { getSslsList, getSslData, updateSsl, deleteSsl, addSsl } from '@/api/data'
 export default {
-  name: "ssl_page",
+  name: 'ssl_page',
   components: {
     Tables
   },
-  data() {
+  data () {
     return {
       plugins: {},
       formData: {
       },
       addSslDialogStatus: false,
       isEditSslStatus: false,
-      submitStatus:false,
-      editSslId:null,
+      submitStatus: false,
+      editSslId: null,
       columns: [
-        { title: "id", key: "id", sortable: true },
-        { title: "sni", key: "sni" },
+        { title: 'id', key: 'id', sortable: true },
+        { title: 'sni', key: 'sni' },
         {
-          title: "操作",
-          key: "handle",
+          title: '操作',
+          key: 'handle',
           button: (h, params) => {
-            return h("div", [
+            return h('div', [
               h(
-                "Button",
+                'Button',
                 {
                   props: {
-                    type: "primary",
-                    size: "small"
+                    type: 'primary',
+                    size: 'small'
                   },
                   style: {
-                    marginRight: "5px"
+                    marginRight: '5px'
                   },
                   on: {
                     click: () => {
-                      this.edit(params.tableData[params.index]);
+                      this.edit(params.tableData[params.index])
                     }
                   }
                 },
-                "编辑"
+                '编辑'
               ),
               h(
-                "Button",
+                'Button',
                 {
                   props: {
-                    type: "error",
-                    size: "small"
+                    type: 'error',
+                    size: 'small'
                   },
                   on: {
                     click: () => {
                       this.$Modal.confirm({
-                        title: "确认删除",
+                        title: '确认删除',
                         content:
-                          "<p>确认删除 " +
+                          '<p>确认删除 ' +
                           params.tableData[params.index].desc +
-                          " " +
+                          ' ' +
                           params.tableData[params.index].username +
-                          " ?</p>",
+                          ' ?</p>',
                         loading: true,
                         onOk: () => {
                           deleteSsl(params.tableData[params.index].username)
                             .then(res => {
-                              this.$Modal.remove();
-                              this.$Message.success("Has Deleted!");
-                              this.init();
+                              this.$Modal.remove()
+                              this.$Message.success('Has Deleted!')
+                              this.init()
                             })
                             .catch((e, res) => {
-                              this.$Modal.remove();
+                              this.$Modal.remove()
                               this.$Notice.error({
-                                title: "操作失败",
+                                title: '操作失败',
                                 desc: e.response.data.error_msg
-                              });
-                            });
+                              })
+                            })
                         }
-                      });
+                      })
                     }
                   }
                 },
-                "删除"
+                '删除'
               )
-            ]);
+            ])
           }
         }
       ],
       tableData: []
-    };
+    }
   },
   methods: {
     /**
      * 提交路由保存
      */
-    submitForm() {
-      this.$refs["formDialog"].validate(valid => {
+    submitForm () {
+      this.$refs['formDialog'].validate(valid => {
         if (!valid) {
-          return;
+          return
         }
-       
-        this.submitStatus=true;
-        //update
+
+        this.submitStatus = true
+        // update
         if (this.isEditSslStatus) {
-          let key = this.editSslId.match(/\/([0-9]+)/)[1];
-          updateSsl(key,this.formData)
+          let key = this.editSslId.match(/\/([0-9]+)/)[1]
+          updateSsl(key, this.formData)
             .then((res, t) => {
-              this.addSslDialogStatus = false;
-              this.isEditSslStatus = false;
-              this.submitStatus=false;
-              this.formData={};
-              this.init();
+              this.addSslDialogStatus = false
+              this.isEditSslStatus = false
+              this.submitStatus = false
+              this.formData = {}
+              this.init()
             })
             .catch((e, res) => {
-              this.submitStatus=false;
+              this.submitStatus = false
               this.$Notice.error({
-                title: "操作失败",
+                title: '操作失败',
                 desc: e.response.data.error_msg
-              });
-            });
-          return;
+              })
+            })
+          return
         }
-        //add
+        // add
         addSsl(this.formData)
           .then((res, t) => {
-            this.addSslDialogStatus = false;
-            this.isEditSslStatus = false;
-            this.submitStatus=false;
-            this.formData={};
-            this.init();
+            this.addSslDialogStatus = false
+            this.isEditSslStatus = false
+            this.submitStatus = false
+            this.formData = {}
+            this.init()
           })
           .catch((e, res) => {
-            this.submitStatus=false;
+            this.submitStatus = false
             this.$Notice.error({
-              title: "操作失败",
+              title: '操作失败',
               desc: e.response.data.error_msg
-            });
-          });
-          
-      });
+            })
+          })
+      })
     },
 
-    edit(routeData) {
-      //upstream进入编辑模式
-      this.isEditSslStatus = true;
-      this.addSslDialogStatus = true;
+    edit (routeData) {
+      // upstream进入编辑模式
+      this.isEditSslStatus = true
+      this.addSslDialogStatus = true
       getSslData(routeData.id).then(res => {
-        this.formData = res.data.node.value;
-        this.editSslId=res.data.node.key;
-      });
+        this.formData = res.data.node.value
+        this.editSslId = res.data.node.key
+      })
     },
 
-    init() {
+    init () {
       getSslsList().then(res => {
-        this.tableData = [];
-        var _data = {};
+        this.tableData = []
+        var _data = {}
         for (var i = 0; i < res.data.node.nodes.length; i++) {
           _data = {
             id: res.data.node.nodes[i].key.match(/\/([0-9]+)/)[1],
             sni: res.data.node.nodes[i].value.sni
-          };
-          this.tableData.push(_data);
+          }
+          this.tableData.push(_data)
         }
-        //this.tableData
-      });
+        // this.tableData
+      })
     }
   },
-  mounted() {
-    this.init();
+  mounted () {
+    this.init()
   }
-};
+}
 </script>
 
 <style>

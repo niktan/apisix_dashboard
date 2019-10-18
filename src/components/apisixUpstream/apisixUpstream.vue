@@ -84,58 +84,58 @@
 </template>
 
 <script>
-import Tables from "_c/tables";
-import { Form } from "iview";
+import Tables from '_c/tables'
+import { Form } from 'iview'
 import {
   getUpstreamsData,
   getUpstreamsList,
   addUpstream,
   deleteUpstream,
   updateUpstream
-} from "@/api/data";
+} from '@/api/data'
 export default {
-  name: "apisixUpstream",
+  name: 'apisixUpstream',
   components: {
     Tables
   },
   props: {
     status: Boolean,
-    editId:String
+    editId: String
   },
-  data() {
+  data () {
     return {
       submitStatus: false,
       formData: {
-        desc:'',
-        type: "roundrobin",
+        desc: '',
+        type: 'roundrobin',
         upstreamNodeList: [],
         nodes: {}
       },
       upstreamTypeList: [
         {
-          value: "roundrobin",
-          label: "roundrobin"
+          value: 'roundrobin',
+          label: 'roundrobin'
         },
         {
-          value: "chash",
-          label: "chash"
+          value: 'chash',
+          label: 'chash'
         }
       ],
       isEditUpstreamStatus: false,
-      upstreamList: [],
-    };
+      upstreamList: []
+    }
   },
   methods: {
     /**
      * 提交保存
      */
-    submitForm() {
-      this.$refs["formDialog"].validate(valid => {
+    submitForm () {
+      this.$refs['formDialog'].validate(valid => {
         if (!valid) {
-          return;
+          return
         }
 
-        this.formData.nodes = {};
+        this.formData.nodes = {}
         for (
           let index = 0;
           index < this.formData.upstreamNodeList.length;
@@ -143,120 +143,120 @@ export default {
         ) {
           this.formData.nodes[
             this.formData.upstreamNodeList[index].ip +
-              ":" +
+              ':' +
               this.formData.upstreamNodeList[index].port
-          ] = this.formData.upstreamNodeList[index].weights;
+          ] = this.formData.upstreamNodeList[index].weights
         }
 
-        let _data = this.formData;
-        delete _data.upstreamNodeList;
+        let _data = this.formData
+        delete _data.upstreamNodeList
 
-        //更新
+        // 更新
         if (this.isEditUpstreamStatus) {
-          let id = _data.id.match(/\/([0-9]+)/)[1];
-          delete _data.id;
+          let id = _data.id.match(/\/([0-9]+)/)[1]
+          delete _data.id
           updateUpstream(id, _data)
             .then((res, t) => {
-              this.closeDialog();
-              this.isEditUpstreamStatus = false;
-              this.submitStatus = false;
-              this.initFormData();
+              this.closeDialog()
+              this.isEditUpstreamStatus = false
+              this.submitStatus = false
+              this.initFormData()
             })
             .catch((e) => {
-              this.submitStatus = false;
+              this.submitStatus = false
               this.$Notice.error({
-                title: "操作失败",
+                title: '操作失败',
                 desc: e.response.data.error_msg
-              });
-            });
-          return;
+              })
+            })
+          return
         }
 
-        //新增
+        // 新增
         addUpstream(_data)
           .then((res, t) => {
-            this.closeDialog();
-            this.isEditUpstreamStatus = false;
-            this.submitStatus = false;
-            this.initFormData();
+            this.closeDialog()
+            this.isEditUpstreamStatus = false
+            this.submitStatus = false
+            this.initFormData()
           })
           .catch((e) => {
-            this.submitStatus = false;
+            this.submitStatus = false
             this.$Notice.error({
-              title: "操作失败",
+              title: '操作失败',
               desc: e.response.data.error_msg
-            });
-          });
-      });
+            })
+          })
+      })
     },
 
-    upstreamTypeChange(data) {
-      if (data == "roundrobin") {
-        this.formData.key = "";
+    upstreamTypeChange (data) {
+      if (data == 'roundrobin') {
+        this.formData.key = ''
       }
     },
 
-    removeNode(index) {
-      if(this.formData.upstreamNodeList.length==1){
-        return false;
+    removeNode (index) {
+      if (this.formData.upstreamNodeList.length == 1) {
+        return false
       }
-      this.formData.upstreamNodeList.splice(index, 1);
+      this.formData.upstreamNodeList.splice(index, 1)
     },
 
-    addNodes() {
+    addNodes () {
       this.formData.upstreamNodeList.push({
-        ip: "",
-        port: "",
+        ip: '',
+        port: '',
         weights: 1
-      });
-      console.log(this.formData);
+      })
+      console.log(this.formData)
     },
-    title(){
-      if(this.isEditUpstreamStatus){
-        return "编辑 Upstream";
+    title () {
+      if (this.isEditUpstreamStatus) {
+        return '编辑 Upstream'
       }
-      return "添加 Upstream";
+      return '添加 Upstream'
     },
-    edit(id) {
-      //upstream进入编辑模式
-      this.isEditUpstreamStatus = true;
+    edit (id) {
+      // upstream进入编辑模式
+      this.isEditUpstreamStatus = true
       getUpstreamsData(id).then(res => {
-        this.initFormData();
-        this.formData.desc = res.data.node.value.desc;
-        this.formData.id = res.data.node.key;
-        var _e = [];
+        this.initFormData()
+        this.formData.desc = res.data.node.value.desc
+        this.formData.id = res.data.node.key
+        var _e = []
         for (const key in res.data.node.value.nodes) {
-          _e = key.split(":");
+          _e = key.split(':')
           this.formData.upstreamNodeList.push({
             ip: _e[0],
             port: _e[1],
             weights: res.data.node.value.nodes[key]
-          });
+          })
         }
-        console.log(this.formData);
-      });
+        console.log(this.formData)
+      })
     },
-    initFormData() {
+    initFormData () {
       // this.formData.type = "roundrobin";
-      this.formData.upstreamNodeList = [];
-      this.formData.nodes = {};
-      this.formData.desc = "";
+      this.formData.upstreamNodeList = []
+      this.formData.nodes = {}
+      this.formData.desc = ''
       // this.$refs["formDialog"].resetFields();
     },
-    closeDialog(){
-      this.$emit("on-status",false);
+    closeDialog () {
+      this.$emit('on-status', false)
     }
   },
   watch: {
-    editId(id) {
-      this.edit(id);
+    editId (id) {
+      this.edit(id)
     },
-    status(_status){
-        this.initFormData();
+    status (_status) {
+      this.initFormData()
     }
   },
-  mounted() {}
-};
+  mounted () {}
+}
 </script>
 
 <style>
